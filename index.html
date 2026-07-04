@@ -20,21 +20,64 @@ body{
     width: 500px;
     max-width: 80%;
 }
-    
-h1{
-    text-align:center;
+
+/* FILTER DROPDOWN TOP LEFT */
+.filter-wrapper{
+    position:fixed;
+    top:15px;
+    left:15px;
+    z-index:10;
 }
 
+.filter-btn{
+    width:50px;
+    height:50px;
+    border-radius:10px;
+    border:none;
+    background:none;
+    color:white;
+    font-size:30px;
+    cursor:pointer;
+}
+
+.filter-menu{
+    display:none;
+    position:absolute;
+    top:55px;
+    left:0;
+    background:none;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.filter-menu button{
+    display:block;
+    width:140px;
+    padding:10px;
+    border:none;
+    background:none;
+    color:white;
+    text-align:left;
+    cursor:pointer;
+}
+
+.filter-menu button:hover{
+    background:#444;
+}
+
+/* SEARCH */
 input{
-    width:100%;
+    width:55%;
+    display:block;
+    margin: 10px auto 15px auto;
     padding:12px;
     font-size:18px;
     border-radius:10px;
     border:none;
-    margin-bottom:20px;
     box-sizing:border-box;
 }
 
+/* ITEM */
 .item{
     display:flex;
     justify-content:space-between;
@@ -42,25 +85,16 @@ input{
     margin:8px auto;
     width:55%;
 }
-  
- #search{
-    display:flex;
-    justify-content:space-between;
-    align-items:stretch;
-    margin:8px auto;
-    width:55%;
-    border-radius:5px;
-}
 
-.left-box {
+.left-box{
     background:white;
     padding:8px 12px;
     border-radius:5px;
-      display:flex;
+    display:flex;
     align-items:center;
     gap:12px;
     flex:1;
-  color:black
+    color:black;
 }
 
 .count{
@@ -76,7 +110,7 @@ input{
     margin-left:10px;
 }
 
-button{
+button.action{
     width:40px;
     height:40px;
     border:none;
@@ -84,20 +118,12 @@ button{
     font-size:22px;
     font-weight:bold;
     cursor:pointer;
-}
-
-.minus{
     background:none;
     color:white;
-    font-size: 35px;
+    font-size:35px;
 }
 
-.plus{
-    background:none;
-    color:white;
-  font-size: 35px;
-}
-
+/* RESET */
 .reset{
     position:fixed;
     top:15px;
@@ -108,66 +134,99 @@ button{
     background:none;
     color:white;
     font-size:40px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
     border:none;
     cursor:pointer;
 }
-  
+
+/* CATEGORY TITLE */
+.category-title{
+    width:55%;
+    margin:20px auto 10px auto;
+    font-size:18px;
+    opacity:0.8;
+    border-bottom:1px solid rgba(255,255,255,0.25);
+    padding-bottom:5px;
+}
 </style>
 
 </head>
 
 <body>
 
-<img src="sneaky.png" alt="Sneaky Sasquatch Inventory" class="title-image">
-<br>
-<input id="search" placeholder="Search...">
-<br>
-<div id="inventory"></div>
+<!-- FILTER TOP LEFT -->
+<div class="filter-wrapper">
+    <button class="filter-btn" onclick="toggleMenu()">⋯</button>
+    <div class="filter-menu" id="menu">
+        <button onclick="setSort('name')">alphabetical</button>
+        <button onclick="setSort('min')">min</button>
+        <button onclick="setSort('max')">max</button>
+        <button onclick="setSort('store')">store</button>
+    </div>
+</div>
 
 <button class="reset" onclick="resetAll()">↩</button>
+
+<img src="sneaky.png" class="title-image">
+
+<input id="search" placeholder="search...">
+
+<div id="inventory"></div>
 
 <script>
 
 const items = [
-{ name:"apple" },
-{ name:"avocado" },
-{ name:"banana" },
-{ name:"bbq sauce" },
-{ name:"beef jerky" },
-{ name:"burger" },
-{ name:"canned pizza" },
-{ name:"canned soup" },
-{ name:"candy" },
-{ name:"chips" },
-{ name:"chocolate milk" },
-{ name:"frozen waffles" },
-{ name:"grape soda" },
-{ name:"hot sauce" },
-{ name:"jam" },
-{ name:"ketchup" },
-{ name:"lemon" },
-{ name:"lettuce" },
-{ name:"lime" },
-{ name:"milk" },
-{ name:"mustard" },
-{ name:"orange" },
-{ name:"orange juice" },
-{ name:"orange soda" },
-{ name:"pretzels" },
-{ name:"relish" },
-{ name:"s'mores" },
-{ name:"sausage" },
-{ name:"soy sauce" },
-{ name:"taco" },
-{ name:"water" }
+{ name:"lemon", category:"grocery store" },
+{ name:"orange", category:"grocery store" },
+{ name:"lime", category:"grocery store" },
+{ name:"apple", category:"grocery store" },
+{ name:"banana", category:"grocery store" },
+{ name:"lettuce/cabbage", category:"grocery store" },
+{ name:"canned soup", category:"grocery store" },
+{ name:"canned pizza", category:"grocery store" },
+{ name:"hot sauce", category:"grocery store" },
+{ name:"ketchup", category:"grocery store" },
+{ name:"mustard", category:"grocery store" },
+{ name:"relish", category:"grocery store" },
+{ name:"jam", category:"grocery store" },
+{ name:"bbq sauce", category:"grocery store" },
+{ name:"soy sauce", category:"grocery store" },
+{ name:"mayonnaise", category:"grocery store" },
+{ name:"milk", category:"grocery store" },
+{ name:"orange juice", category:"grocery store" },
+{ name:"frozen waffles", category:"grocery store" },
+
+{ name:"pretzels", category:"gas station" },
+{ name:"beef jerky", category:"gas station" },
+{ name:"chips/crisps", category:"gas station" },
+{ name:"candy", category:"gas station" },
+{ name:"water bottle", category:"gas station" },
+{ name:"orange soda", category:"gas station" },
+{ name:"grape soda", category:"gas station" },
+{ name:"chocolate milk", category:"gas station" },
+
+{ name:"burger", category:"diner" },
+
+{ name:"s'mores", category:"campsite" },
+{ name:"sausage", category:"campsite" },
+{ name:"avocado half", category:"campsite" },
+
+{ name:"taco", category:"island" }
 ];
 
-items.sort((a,b)=>a.name.localeCompare(b.name));
+let sortMode = "name";
 
-const inventory=document.getElementById("inventory");
+const inventory = document.getElementById("inventory");
+
+function toggleMenu(){
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function setSort(mode){
+    sortMode = mode;
+    draw();
+    document.getElementById("menu").style.display = "none";
+}
 
 function getCount(item){
     return Number(localStorage.getItem(item)||0);
@@ -177,65 +236,119 @@ function setCount(item,value){
     localStorage.setItem(item,value);
 }
 
+function renderItem(item){
+
+    const row = document.createElement("div");
+    row.className = "item";
+
+    row.innerHTML = `
+        <div class="left-box">
+            <span class="count">${getCount(item.name)}</span>
+            <span>${item.name}</span>
+        </div>
+
+        <div class="controls">
+            <button class="action plus">+</button>
+            <button class="action minus">−</button>
+        </div>
+    `;
+
+    row.querySelector(".minus").onclick = ()=>{
+        let value = Math.max(0, getCount(item.name)-1);
+        setCount(item.name, value);
+        draw();
+    };
+
+    row.querySelector(".plus").onclick = ()=>{
+        let value = getCount(item.name)+1;
+        setCount(item.name, value);
+        draw();
+    };
+
+    inventory.appendChild(row);
+}
+
 function draw(){
 
     inventory.innerHTML="";
 
-    const filter=document.getElementById("search").value.toLowerCase();
+    const filter = document.getElementById("search").value.toLowerCase();
 
-    items.forEach(item=>{
+    let list = [...items];
 
-        if(!item.name.toLowerCase().includes(filter)) return;
+    list.sort((a,b)=>{
 
-        const row=document.createElement("div");
-        row.className="item";
+        const aCount = getCount(a.name);
+        const bCount = getCount(b.name);
 
-        row.innerHTML=`
-            <div class="left-box">
-                <span class="count">${getCount(item.name)}</span>
-                <span>${item.name}</span>
-            </div>
+        if(sortMode === "name"){
+            return a.name.localeCompare(b.name);
+        }
 
-            <div class="controls">
-                <button class="plus">+</button>
-                <button class="minus">−</button>
-            </div>
-        `;
+        if(sortMode === "min"){
+            return aCount - bCount;
+        }
 
-        row.querySelector(".minus").onclick=()=>{
+        if(sortMode === "max"){
+            return bCount - aCount;
+        }
 
-            let value=Math.max(0,getCount(item.name)-1);
-            setCount(item.name,value);
-            draw();
+        if(sortMode === "store"){
+            if(a.category === b.category){
+                return a.name.localeCompare(b.name);
+            }
+            return a.category.localeCompare(b.category);
+        }
 
-        };
-
-        row.querySelector(".plus").onclick=()=>{
-
-            let value=getCount(item.name)+1;
-            setCount(item.name,value);
-            draw();
-
-        };
-
-        inventory.appendChild(row);
-
+        return 0;
     });
 
+    if(sortMode === "store"){
+
+        let grouped = {};
+
+        list.forEach(item=>{
+            if(!item.name.toLowerCase().includes(filter)) return;
+
+            if(!grouped[item.category]){
+                grouped[item.category] = [];
+            }
+
+            grouped[item.category].push(item);
+        });
+
+        let categories = Object.keys(grouped).sort();
+
+        categories.forEach(category=>{
+
+            const title = document.createElement("div");
+            title.className = "category-title";
+            title.textContent = category;
+
+            inventory.appendChild(title);
+
+            grouped[category].forEach(item=>{
+                renderItem(item);
+            });
+        });
+
+    } else {
+
+        list.forEach(item=>{
+            if(!item.name.toLowerCase().includes(filter)) return;
+            renderItem(item);
+        });
+    }
 }
 
 function resetAll(){
-
     if(confirm("Reset every item?")){
-
         localStorage.clear();
         draw();
-
     }
-
 }
 
-document.getElementById("search").addEventListener("input",draw);
+document.getElementById("search").addEventListener("input", draw);
 
 draw();
 
