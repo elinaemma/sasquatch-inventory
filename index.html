@@ -8,7 +8,7 @@
 <style>
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:#1f1f1f;
+    background:#495e2d;
     color:white;
     margin:0;
     padding:20px;
@@ -28,23 +28,16 @@ input{
     box-sizing:border-box;
 }
 
-.category{
-    margin-top:30px;
-}
-
-.category h2{
-    border-bottom:2px solid #555;
-    padding-bottom:5px;
-}
-
 .item{
     display:flex;
     justify-content:space-between;
     align-items:center;
     background:#2f2f2f;
-    margin:8px 0;
+    margin:8px auto;
     padding:10px;
     border-radius:12px;
+    width:65%;
+    box-sizing:border-box;
 }
 
 .controls{
@@ -103,56 +96,41 @@ button{
 
 <script>
 
-const categories = {
+const items = [
+{ name:"Apple", emoji:"🍎" },
+{ name:"Avocado Half", emoji:"🥑" },
+{ name:"Banana", emoji:"🍌" },
+{ name:"BBQ Sauce", emoji:"🍖" },
+{ name:"Beef Jerky", emoji:"🥩" },
+{ name:"Burger", emoji:"🍔" },
+{ name:"Canned Pizza", emoji:"🍕" },
+{ name:"Canned Soup", emoji:"🥫" },
+{ name:"Candy", emoji:"🍬" },
+{ name:"Chips/Crisps", emoji:"🥔" },
+{ name:"Chocolate Milk", emoji:"🥛" },
+{ name:"Frozen Waffles", emoji:"🧇" },
+{ name:"Grape Soda", emoji:"🥤" },
+{ name:"Hot Sauce", emoji:"🌶️" },
+{ name:"Jam", emoji:"🍓" },
+{ name:"Ketchup", emoji:"🍅" },
+{ name:"Lemon", emoji:"🍋" },
+{ name:"Lettuce/Cabbage", emoji:"🥬" },
+{ name:"Lime", emoji:"🟢" },
+{ name:"Milk", emoji:"🥛" },
+{ name:"Mustard", emoji:"🟡" },
+{ name:"Orange", emoji:"🍊" },
+{ name:"Orange Juice", emoji:"🧃" },
+{ name:"Orange Soda", emoji:"🥤" },
+{ name:"Pretzels", emoji:"🥨" },
+{ name:"Relish", emoji:"🥒" },
+{ name:"S'more", emoji:"🍫🔥" },
+{ name:"Sausage", emoji:"🌭" },
+{ name:"Soy Sauce", emoji:"🥢" },
+{ name:"Taco", emoji:"🌮" },
+{ name:"Water Bottle", emoji:"💧" }
+];
 
-"Grocery Store":[
-"Lemon",
-"Orange",
-"Lime",
-"Apple",
-"Banana",
-"Lettuce/Cabbage",
-"Canned Soup",
-"Canned Pizza",
-"Hot Sauce",
-"Ketchup",
-"Mustard",
-"Relish",
-"Jam",
-"BBQ Sauce",
-"Soy Sauce",
-"Mayonnaise",
-"Milk",
-"Orange Juice",
-"Frozen Waffles"
-],
-
-"Gas Station":[
-"Pretzels",
-"Beef Jerky",
-"Chips/Crisps",
-"Candy",
-"Water Bottle",
-"Orange Soda",
-"Grape Soda",
-"Chocolate Milk"
-],
-
-"Cafe":[
-"Burger"
-],
-
-"Campsite":[
-"S'more",
-"Sausage",
-"Avocado Half"
-],
-
-"Island Taco Truck":[
-"Taco"
-]
-
-};
+items.sort((a,b)=>a.name.localeCompare(b.name));
 
 const inventory=document.getElementById("inventory");
 
@@ -170,64 +148,41 @@ function draw(){
 
     const filter=document.getElementById("search").value.toLowerCase();
 
-    for(const category in categories){
+    items.forEach(item=>{
 
-        let section=document.createElement("div");
-        section.className="category";
+        if(!item.name.toLowerCase().includes(filter)) return;
 
-        let title=document.createElement("h2");
-        title.innerText=category;
-        section.appendChild(title);
+        const row=document.createElement("div");
+        row.className="item";
 
-        let visible=false;
+        row.innerHTML=`
+            <div>${item.emoji} ${item.name}</div>
+            <div class="controls">
+                <button class="minus">−</button>
+                <div class="count">${getCount(item.name)}</div>
+                <button class="plus">+</button>
+            </div>
+        `;
 
-        categories[category].forEach(item=>{
+        row.querySelector(".minus").onclick=()=>{
 
-            if(!item.toLowerCase().includes(filter)) return;
+            let value=Math.max(0,getCount(item.name)-1);
+            setCount(item.name,value);
+            draw();
 
-            visible=true;
+        };
 
-            const row=document.createElement("div");
-            row.className="item";
+        row.querySelector(".plus").onclick=()=>{
 
-            row.innerHTML=`
-                <div>${item}</div>
+            let value=getCount(item.name)+1;
+            setCount(item.name,value);
+            draw();
 
-                <div class="controls">
+        };
 
-                    <button class="minus">−</button>
+        inventory.appendChild(row);
 
-                    <div class="count">${getCount(item)}</div>
-
-                    <button class="plus">+</button>
-
-                </div>
-            `;
-
-            row.querySelector(".minus").onclick=()=>{
-
-                let value=Math.max(0,getCount(item)-1);
-                setCount(item,value);
-                draw();
-
-            }
-
-            row.querySelector(".plus").onclick=()=>{
-
-                let value=getCount(item)+1;
-                setCount(item,value);
-                draw();
-
-            }
-
-            section.appendChild(row);
-
-        });
-
-        if(visible)
-            inventory.appendChild(section);
-
-    }
+    });
 
 }
 
