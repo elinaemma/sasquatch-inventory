@@ -221,12 +221,7 @@ button.action:active{
 
 <div class="top-left">
 
-    <div class="search-wrapper">
-        <button class="search-toggle" onclick="toggleSearch()">🔍</button>
-        <input id="search" class="search-input" placeholder="search..." />
-    </div>
-
-    <div class="filter-wrapper">
+      <div class="filter-wrapper">
         <button class="filter-btn" onclick="toggleMenu()">⚙️</button>
         <div class="filter-menu" id="menu">
             <button onclick="setSort('name')">alphabetical</button>
@@ -234,6 +229,11 @@ button.action:active{
             <button onclick="setSort('max')">max</button>
             <button onclick="setSort('store')">store</button>
         </div>
+    </div>
+  
+    <div class="search-wrapper">
+        <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+        <input id="search" class="search-input" placeholder="search..." />
     </div>
 
 </div>
