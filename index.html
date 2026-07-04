@@ -120,11 +120,28 @@ button.action{
     color:white;
 }
 
-/* RESET */
-.reset{
+/* TOP RIGHT */
+.top-right{
     position:fixed;
     top:15px;
     right:15px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.top-right button{
+    width:55px;
+    height:55px;
+    border-radius:10px;
+    background:none;
+    color:white;
+    font-size:28px;
+    border:none;
+    cursor:pointer;
+}
+
+.reset{
     width:55px;
     height:55px;
     border-radius:50%;
@@ -159,7 +176,14 @@ button.action{
     </div>
 </div>
 
-<button class="reset" onclick="resetAll()">↩</button>
+<!-- TOP RIGHT -->
+<div class="top-right">
+    <button onclick="loadGameTrigger()" title="import">⬆</button>
+    <button onclick="saveGame()" title="export">⬇</button>
+    <button class="reset" onclick="resetAll()" title="reset">↩</button>
+</div>
+
+<input type="file" id="fileInput" style="display:none" onchange="loadGame(event)">
 
 <img src="sneaky.png" class="title-image">
 
@@ -168,6 +192,10 @@ button.action{
 <div id="inventory"></div>
 
 <script>
+
+function loadGameTrigger(){
+    document.getElementById("fileInput").click();
+}
 
 const items = [
 { name:"lemon", category:"grocery store" },
@@ -232,10 +260,8 @@ function updateMenuChecks(){
         const btn = document.querySelector(`button[onclick="setSort('${m}')"]`);
         if(!btn) return;
 
-        // ta bort tidigare markeringar
         btn.textContent = btn.textContent.replace("» ","");
 
-        // lägg till pil på aktiv
         if(m === sortMode){
             btn.textContent = "» " + btn.textContent;
         }
@@ -346,6 +372,56 @@ function draw(){
             renderItem(item);
         });
     }
+}
+
+/* SAVE / LOAD / RESET */
+
+function saveGame(){
+
+    const data = {};
+
+    for(let i=0;i<localStorage.length;i++){
+        const key = localStorage.key(i);
+        data[key] = localStorage.getItem(key);
+    }
+
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "inventory-save.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function loadGame(event){
+
+    const file = event.target.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        try{
+            const data = JSON.parse(e.target.result);
+
+            localStorage.clear();
+
+            for(const key in data){
+                localStorage.setItem(key, data[key]);
+            }
+
+            draw();
+
+        } catch(err){
+            alert("Invalid file");
+        }
+    };
+
+    reader.readAsText(file);
 }
 
 function resetAll(){
