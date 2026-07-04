@@ -21,12 +21,56 @@ body{
     max-width: 80%;
 }
 
-/* FILTER */
-.filter-wrapper{
+/* TOP LEFT BAR (SEARCH + FILTER) */
+.top-left{
     position:fixed;
     top:15px;
     left:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
     z-index:10;
+}
+
+/* SEARCH */
+.search-wrapper{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.search-toggle{
+    width:50px;
+    height:50px;
+    border-radius:5px;
+    border:none;
+    background:none;
+    color:white;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.search-input{
+    width:0;
+    opacity:0;
+    padding:0;
+    border:none;
+    border-radius:5px;
+    font-size:16px;
+    transition:all 0.25s ease;
+    background:white;
+    color:black;
+}
+
+.search-input.active{
+    width:200px;
+    opacity:1;
+    padding:10px;
+}
+
+/* FILTER */
+.filter-wrapper{
+    position:relative;
 }
 
 .filter-btn{
@@ -62,18 +106,6 @@ body{
 
 .filter-menu button:hover{
     background:#3b4c24;
-}
-
-/* SEARCH */
-input{
-    width:55%;
-    display:block;
-    margin: 10px auto 15px auto;
-    padding:12px;
-    font-size:18px;
-    border-radius:10px;
-    border:none;
-    box-sizing:border-box;
 }
 
 /* ITEM */
@@ -141,6 +173,7 @@ button.action{
     cursor:pointer;
 }
 
+/* RESET */
 .reset{
     width:55px;
     height:55px;
@@ -165,21 +198,32 @@ button.action{
 
 <body>
 
-<!-- FILTER -->
-<div class="filter-wrapper">
-    <button class="filter-btn" onclick="toggleMenu()">⋯</button>
-    <div class="filter-menu" id="menu">
-        <button onclick="setSort('name')">alphabetical</button>
-        <button onclick="setSort('min')">min</button>
-        <button onclick="setSort('max')">max</button>
-        <button onclick="setSort('store')">store</button>
+<!-- TOP LEFT -->
+<div class="top-left">
+
+    <!-- SEARCH -->
+    <div class="search-wrapper">
+        <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+        <input id="search" class="search-input" placeholder="search..." />
     </div>
+
+    <!-- FILTER -->
+    <div class="filter-wrapper">
+        <button class="filter-btn" onclick="toggleMenu()">⚙️</button>
+        <div class="filter-menu" id="menu">
+            <button onclick="setSort('name')">alphabetical</button>
+            <button onclick="setSort('min')">min</button>
+            <button onclick="setSort('max')">max</button>
+            <button onclick="setSort('store')">store</button>
+        </div>
+    </div>
+
 </div>
 
 <!-- TOP RIGHT -->
 <div class="top-right">
-    <button onclick="loadGameTrigger()" title="import">⬆</button>
-    <button onclick="saveGame()" title="export">⬇</button>
+    <button onclick="loadGameTrigger()" title="import">📂</button>
+    <button onclick="saveGame()" title="export">💾</button>
     <button class="reset" onclick="resetAll()" title="reset">↩</button>
 </div>
 
@@ -187,11 +231,17 @@ button.action{
 
 <img src="sneaky.png" class="title-image">
 
-<input id="search" placeholder="search...">
-
 <div id="inventory"></div>
 
 <script>
+
+function toggleSearch(){
+    const input = document.getElementById("search");
+    input.classList.toggle("active");
+    if(input.classList.contains("active")){
+        input.focus();
+    }
+}
 
 function loadGameTrigger(){
     document.getElementById("fileInput").click();
@@ -253,7 +303,6 @@ function setSort(mode){
 }
 
 function updateMenuChecks(){
-
     const modes = ["name","min","max","store"];
 
     modes.forEach(m=>{
@@ -337,7 +386,6 @@ function draw(){
             }
             return a.category.localeCompare(b.category);
         }
-
     });
 
     if(sortMode === "store"){
@@ -355,7 +403,6 @@ function draw(){
         });
 
         Object.keys(grouped).sort().forEach(cat=>{
-            
             const title = document.createElement("div");
             title.className = "category-title";
             title.textContent = cat;
@@ -374,12 +421,10 @@ function draw(){
     }
 }
 
-/* SAVE / LOAD / RESET */
+/* SAVE / LOAD */
 
 function saveGame(){
-
     const data = {};
-
     for(let i=0;i<localStorage.length;i++){
         const key = localStorage.key(i);
         data[key] = localStorage.getItem(key);
@@ -397,14 +442,12 @@ function saveGame(){
 }
 
 function loadGame(event){
-
     const file = event.target.files[0];
     if(!file) return;
 
     const reader = new FileReader();
 
     reader.onload = function(e){
-
         try{
             const data = JSON.parse(e.target.result);
 
@@ -415,7 +458,6 @@ function loadGame(event){
             }
 
             draw();
-
         } catch(err){
             alert("Invalid file");
         }
