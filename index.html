@@ -12,10 +12,17 @@
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:blue; <!-- #495e2d -->
+    background:#495e2d;
     color:white;
     margin:0;
     padding:20px;
+}
+  
+.title-image{
+    display:block;
+    margin:20px auto;
+    max-width:300px;
+    height:auto;
 }
 
 /* HEADER (FIX) */
@@ -248,7 +255,7 @@ button.action:active{
 </div>
 
 <input type="file" id="fileInput" style="display:none" onchange="loadGame(event)">
-
+  
 <img src="sneaky.png" class="title-image">
 
 <div id="inventory"></div>
