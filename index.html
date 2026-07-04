@@ -10,20 +10,12 @@
     box-sizing:border-box;
 }
 
-html, body{
-    height:100%;
-    margin:0;
-    padding:0;
-    overflow-x:hidden;
+body{
     font-family:Arial,Helvetica,sans-serif;
     background:#495e2d;
     color:white;
-}
-
-/* stabil fix för mobile fixed buggar */
-body{
+    margin:0;
     padding:20px;
-    -webkit-overflow-scrolling: touch;
 }
 
 .title-image{
@@ -33,19 +25,12 @@ body{
     max-width:90%;
 }
 
-/* TOP LEFT */
+/* TOP LEFT (NOT FIXED ANYMORE) */
 .top-left{
-    position:fixed;
-    top:15px;
-    left:15px;
     display:flex;
     align-items:center;
     gap:10px;
-    z-index:9999;
-
-    /* FIX: stop mobile scroll weirdness */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
+    margin-bottom:15px;
 }
 
 /* SEARCH */
@@ -171,17 +156,11 @@ button.action:active{
     transform:scale(0.9);
 }
 
-/* TOP RIGHT */
+/* TOP RIGHT (NOT FIXED ANYMORE) */
 .top-right{
-    position:fixed;
-    top:15px;
-    right:15px;
     display:flex;
     gap:10px;
-    z-index:9999;
-
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
+    margin-bottom:15px;
 }
 
 .top-right button{
@@ -211,20 +190,12 @@ button.action:active{
 /* MOBILE FIX */
 @media (max-width:600px){
 
-    body{
-        padding-top:80px;
-    }
-
     .search-input.active{
         width:140px;
     }
 
     .item{
         max-width:95%;
-    }
-
-    .top-left{
-        gap:6px;
     }
 
     button.action{
