@@ -18,19 +18,27 @@ body{
     padding:20px;
 }
 
-.title-image{
-    display:block;
-    margin:30px auto;
-    width:500px;
-    max-width:90%;
+/* HEADER (FIX) */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 15px 5px 15px;
+    gap:10px;
 }
 
-/* TOP LEFT (NOT FIXED ANYMORE) */
-.top-left{
+/* LEFT SIDE */
+.left-controls{
     display:flex;
     align-items:center;
     gap:10px;
-    margin-bottom:15px;
+}
+
+/* RIGHT SIDE */
+.right-controls{
+    display:flex;
+    gap:10px;
+    align-items:center;
 }
 
 /* SEARCH */
@@ -106,6 +114,22 @@ body{
     background:#3b4c24;
 }
 
+/* RIGHT BUTTONS */
+.right-controls button{
+    width:50px;
+    height:50px;
+    border:none;
+    background:none;
+    color:white;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.reset{
+    border-radius:50%;
+    font-size:34px;
+}
+
 /* ITEM */
 .item{
     display:flex;
@@ -156,28 +180,6 @@ button.action:active{
     transform:scale(0.9);
 }
 
-/* TOP RIGHT (NOT FIXED ANYMORE) */
-.top-right{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.top-right button{
-    width:50px;
-    height:50px;
-    border:none;
-    background:none;
-    color:white;
-    font-size:26px;
-    cursor:pointer;
-}
-
-.reset{
-    border-radius:50%;
-    font-size:34px;
-}
-
 /* CATEGORY */
 .category-title{
     width:100%;
@@ -187,8 +189,13 @@ button.action:active{
     opacity:0.9;
 }
 
-/* MOBILE FIX */
+/* MOBILE */
 @media (max-width:600px){
+
+    .header{
+        flex-wrap:wrap;
+        gap:8px;
+    }
 
     .search-input.active{
         width:140px;
@@ -210,29 +217,34 @@ button.action:active{
 
 <body>
 
-<div class="top-left">
+<!-- HEADER -->
+<div class="header">
 
-    <div class="filter-wrapper">
-        <button class="filter-btn" onclick="toggleMenu()">⚙️</button>
-        <div class="filter-menu" id="menu">
-            <button onclick="setSort('name')">alphabetical</button>
-            <button onclick="setSort('min')">min</button>
-            <button onclick="setSort('max')">max</button>
-            <button onclick="setSort('store')">store</button>
+    <div class="left-controls">
+
+        <div class="filter-wrapper">
+            <button class="filter-btn" onclick="toggleMenu()">⚙️</button>
+            <div class="filter-menu" id="menu">
+                <button onclick="setSort('name')">alphabetical</button>
+                <button onclick="setSort('min')">min</button>
+                <button onclick="setSort('max')">max</button>
+                <button onclick="setSort('store')">store</button>
+            </div>
         </div>
+
+        <div class="search-wrapper">
+            <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+            <input id="search" class="search-input" placeholder="search..." />
+        </div>
+
     </div>
 
-    <div class="search-wrapper">
-        <button class="search-toggle" onclick="toggleSearch()">🔍</button>
-        <input id="search" class="search-input" placeholder="search..." />
+    <div class="right-controls">
+        <button onclick="loadGameTrigger()">📂</button>
+        <button onclick="saveGame()">💾</button>
+        <button class="reset" onclick="resetAll()">↩</button>
     </div>
 
-</div>
-
-<div class="top-right">
-    <button onclick="loadGameTrigger()">📂</button>
-    <button onclick="saveGame()">💾</button>
-    <button class="reset" onclick="resetAll()">↩</button>
 </div>
 
 <input type="file" id="fileInput" style="display:none" onchange="loadGame(event)">
