@@ -6,6 +6,10 @@
 <title>Sneaky Sasquatch Inventory</title>
 
 <style>
+*{
+    box-sizing:border-box;
+}
+
 body{
     font-family:Arial,Helvetica,sans-serif;
     background:#495e2d;
@@ -16,12 +20,12 @@ body{
 
 .title-image{
     display:block;
-    margin: 30px auto;
-    width: 500px;
-    max-width: 80%;
+    margin:30px auto;
+    width:500px;
+    max-width:90%;
 }
 
-/* TOP LEFT BAR (SEARCH + FILTER) */
+/* TOP LEFT */
 .top-left{
     position:fixed;
     top:15px;
@@ -36,13 +40,12 @@ body{
 .search-wrapper{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:8px;
 }
 
 .search-toggle{
     width:50px;
     height:50px;
-    border-radius:5px;
     border:none;
     background:none;
     color:white;
@@ -55,15 +58,15 @@ body{
     opacity:0;
     padding:0;
     border:none;
-    border-radius:5px;
+    border-radius:6px;
     font-size:16px;
-    transition:all 0.25s ease;
+    transition:0.25s ease;
     background:white;
     color:black;
 }
 
 .search-input.active{
-    width:200px;
+    width:180px;
     opacity:1;
     padding:10px;
 }
@@ -73,19 +76,13 @@ body{
     position:relative;
 }
 
-  button.action:active{
-    transform: scale(0.9);
-    transition: transform 0.1s;
-}
-  
 .filter-btn{
     width:50px;
     height:50px;
-    border-radius:10px;
     border:none;
     background:none;
     color:white;
-    font-size:30px;
+    font-size:28px;
     cursor:pointer;
 }
 
@@ -106,7 +103,6 @@ body{
     color:white;
     text-align:left;
     cursor:pointer;
-    font-size:16px;
 }
 
 .filter-menu button:hover{
@@ -117,26 +113,28 @@ body{
 .item{
     display:flex;
     justify-content:space-between;
-    align-items:stretch;
+    align-items:center;
     margin:8px auto;
-    width:55%;
+    width:100%;
+    max-width:700px;
 }
 
 .left-box{
     background:white;
     padding:8px 12px;
-    border-radius:5px;
+    border-radius:6px;
     display:flex;
     align-items:center;
     gap:12px;
     flex:1;
+    min-width:0;
     color:black;
 }
 
 .count{
     width:30px;
     text-align:center;
-    font-size:20px;
+    font-size:18px;
     font-weight:bold;
 }
 
@@ -147,14 +145,18 @@ body{
 }
 
 button.action{
-    width:40px;
-    height:40px;
+    width:42px;
+    height:42px;
     border:none;
     border-radius:10px;
-    font-size:35px;
+    font-size:30px;
     cursor:pointer;
     background:none;
     color:white;
+}
+
+button.action:active{
+    transform:scale(0.9);
 }
 
 /* TOP RIGHT */
@@ -164,38 +166,52 @@ button.action{
     right:15px;
     display:flex;
     gap:10px;
-    align-items:center;
 }
 
 .top-right button{
-    width:55px;
-    height:55px;
-    border-radius:10px;
+    width:50px;
+    height:50px;
+    border:none;
     background:none;
     color:white;
-    font-size:28px;
-    border:none;
+    font-size:26px;
     cursor:pointer;
 }
 
-/* RESET */
 .reset{
-    width:55px;
-    height:55px;
     border-radius:50%;
-    background:none;
-    color:white;
-    font-size:40px;
-    border:none;
-    cursor:pointer;
+    font-size:34px;
 }
 
 /* CATEGORY */
 .category-title{
-    width:55%;
-    margin:20px auto 10px auto;
-    font-size:18px;
-    padding-bottom:5px;
+    width:100%;
+    max-width:700px;
+    margin:18px auto 8px auto;
+    font-size:16px;
+    opacity:0.9;
+}
+
+/* MOBILE FIX */
+@media (max-width:600px){
+
+    .search-input.active{
+        width:140px;
+    }
+
+    .item{
+        max-width:95%;
+    }
+
+    .top-left{
+        gap:6px;
+    }
+
+    button.action{
+        width:46px;
+        height:46px;
+        font-size:32px;
+    }
 }
 </style>
 
@@ -203,16 +219,13 @@ button.action{
 
 <body>
 
-<!-- TOP LEFT -->
 <div class="top-left">
 
-    <!-- SEARCH -->
     <div class="search-wrapper">
         <button class="search-toggle" onclick="toggleSearch()">🔍</button>
         <input id="search" class="search-input" placeholder="search..." />
     </div>
 
-    <!-- FILTER -->
     <div class="filter-wrapper">
         <button class="filter-btn" onclick="toggleMenu()">⚙️</button>
         <div class="filter-menu" id="menu">
@@ -225,11 +238,10 @@ button.action{
 
 </div>
 
-<!-- TOP RIGHT -->
 <div class="top-right">
-    <button onclick="loadGameTrigger()" title="import">📂</button>
-    <button onclick="saveGame()" title="export">💾</button>
-    <button class="reset" onclick="resetAll()" title="reset">↩</button>
+    <button onclick="loadGameTrigger()">📂</button>
+    <button onclick="saveGame()">💾</button>
+    <button class="reset" onclick="resetAll()">↩</button>
 </div>
 
 <input type="file" id="fileInput" style="display:none" onchange="loadGame(event)">
@@ -243,9 +255,7 @@ button.action{
 function toggleSearch(){
     const input = document.getElementById("search");
     input.classList.toggle("active");
-    if(input.classList.contains("active")){
-        input.focus();
-    }
+    if(input.classList.contains("active")) input.focus();
 }
 
 function loadGameTrigger(){
@@ -292,7 +302,6 @@ const items = [
 ];
 
 let sortMode = "name";
-
 const inventory = document.getElementById("inventory");
 
 function toggleMenu(){
@@ -302,24 +311,8 @@ function toggleMenu(){
 
 function setSort(mode){
     sortMode = mode;
-    updateMenuChecks();
     draw();
     document.getElementById("menu").style.display = "none";
-}
-
-function updateMenuChecks(){
-    const modes = ["name","min","max","store"];
-
-    modes.forEach(m=>{
-        const btn = document.querySelector(`button[onclick="setSort('${m}')"]`);
-        if(!btn) return;
-
-        btn.textContent = btn.textContent.replace("» ","");
-
-        if(m === sortMode){
-            btn.textContent = "» " + btn.textContent;
-        }
-    });
 }
 
 function getCount(item){
@@ -340,20 +333,19 @@ function renderItem(item){
             <span class="count">${getCount(item.name)}</span>
             <span>${item.name}</span>
         </div>
-
         <div class="controls">
-            <button class="action plus">+</button>
-            <button class="action minus">−</button>
+            <button class="action">+</button>
+            <button class="action">−</button>
         </div>
     `;
 
-    row.querySelector(".minus").onclick = ()=>{
-        setCount(item.name, Math.max(0, getCount(item.name)-1));
+    row.querySelector(".controls button:nth-child(1)").onclick = ()=>{
+        setCount(item.name, getCount(item.name)+1);
         draw();
     };
 
-    row.querySelector(".plus").onclick = ()=>{
-        setCount(item.name, getCount(item.name)+1);
+    row.querySelector(".controls button:nth-child(2)").onclick = ()=>{
+        setCount(item.name, Math.max(0,getCount(item.name)-1));
         draw();
     };
 
@@ -369,118 +361,78 @@ function draw(){
     let list = [...items];
 
     list.sort((a,b)=>{
-
         const aCount = getCount(a.name);
         const bCount = getCount(b.name);
 
-        if(sortMode === "name"){
-            return a.name.localeCompare(b.name);
-        }
-
-        if(sortMode === "min"){
-            return aCount - bCount;
-        }
-
-        if(sortMode === "max"){
-            return bCount - aCount;
-        }
-
-        if(sortMode === "store"){
-            if(a.category === b.category){
-                return a.name.localeCompare(b.name);
-            }
+        if(sortMode==="name") return a.name.localeCompare(b.name);
+        if(sortMode==="min") return aCount-bCount;
+        if(sortMode==="max") return bCount-aCount;
+        if(sortMode==="store"){
+            if(a.category===b.category) return a.name.localeCompare(b.name);
             return a.category.localeCompare(b.category);
         }
     });
 
-    if(sortMode === "store"){
-
-        let grouped = {};
+    if(sortMode==="store"){
+        let grouped={};
 
         list.forEach(item=>{
-            if(!item.name.toLowerCase().includes(filter)) return;
-
-            if(!grouped[item.category]){
-                grouped[item.category] = [];
-            }
-
+            if(!item.name.includes(filter)) return;
+            if(!grouped[item.category]) grouped[item.category]=[];
             grouped[item.category].push(item);
         });
 
-        Object.keys(grouped).sort().forEach(cat=>{
-            const title = document.createElement("div");
-            title.className = "category-title";
-            title.textContent = cat;
-
+        Object.keys(grouped).forEach(cat=>{
+            const title=document.createElement("div");
+            title.className="category-title";
+            title.textContent=cat;
             inventory.appendChild(title);
-
             grouped[cat].forEach(renderItem);
         });
 
     } else {
-
         list.forEach(item=>{
-            if(!item.name.toLowerCase().includes(filter)) return;
+            if(!item.name.includes(filter)) return;
             renderItem(item);
         });
     }
 }
 
-/* SAVE / LOAD */
-
 function saveGame(){
-    const data = {};
+    const data={};
     for(let i=0;i<localStorage.length;i++){
-        const key = localStorage.key(i);
-        data[key] = localStorage.getItem(key);
+        const k=localStorage.key(i);
+        data[k]=localStorage.getItem(k);
     }
-
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "inventory-save.json";
+    const blob=new Blob([JSON.stringify(data)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="save.json";
     a.click();
-
     URL.revokeObjectURL(url);
 }
 
-function loadGame(event){
-    const file = event.target.files[0];
-    if(!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-        try{
-            const data = JSON.parse(e.target.result);
-
-            localStorage.clear();
-
-            for(const key in data){
-                localStorage.setItem(key, data[key]);
-            }
-
-            draw();
-        } catch(err){
-            alert("Invalid file");
+function loadGame(e){
+    const file=e.target.files[0];
+    const reader=new FileReader();
+    reader.onload=function(ev){
+        const data=JSON.parse(ev.target.result);
+        localStorage.clear();
+        for(const k in data){
+            localStorage.setItem(k,data[k]);
         }
+        draw();
     };
-
     reader.readAsText(file);
 }
 
 function resetAll(){
-    if(confirm("Reset every item?")){
-        localStorage.clear();
-        draw();
-    }
+    localStorage.clear();
+    draw();
 }
 
-document.getElementById("search").addEventListener("input", draw);
-
-updateMenuChecks();
+document.getElementById("search").addEventListener("input",draw);
 draw();
 
 </script>
