@@ -10,15 +10,22 @@
     box-sizing:border-box;
 }
 
-body{
+html, body{
+    height:100%;
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
     font-family:Arial,Helvetica,sans-serif;
     background:#495e2d;
     color:white;
-    margin:0;
-    padding:20px;
 }
 
-/* IMAGE */
+/* stabil fix för mobile fixed buggar */
+body{
+    padding:20px;
+    -webkit-overflow-scrolling: touch;
+}
+
 .title-image{
     display:block;
     margin:30px auto;
@@ -26,15 +33,19 @@ body{
     max-width:90%;
 }
 
-/* TOP BAR FIX */
+/* TOP LEFT */
 .top-left{
     position:fixed;
-    top:10px;
-    left:10px;
+    top:15px;
+    left:15px;
     display:flex;
     align-items:center;
     gap:10px;
-    z-index:20;
+    z-index:9999;
+
+    /* FIX: stop mobile scroll weirdness */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 /* SEARCH */
@@ -92,9 +103,7 @@ body{
     position:absolute;
     top:55px;
     left:0;
-    background:#2f3d1f;
-    border-radius:8px;
-    overflow:hidden;
+    background:none;
 }
 
 .filter-menu button{
@@ -112,37 +121,35 @@ body{
     background:#3b4c24;
 }
 
-/* ITEM LIST */
+/* ITEM */
 .item{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin:10px auto;
+    margin:8px auto;
     width:100%;
     max-width:700px;
 }
 
-/* LEFT BOX */
 .left-box{
     background:white;
-    padding:10px 12px;
+    padding:8px 12px;
     border-radius:6px;
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:12px;
     flex:1;
-    color:black;
     min-width:0;
+    color:black;
 }
 
-/* COUNT */
 .count{
-    width:35px;
+    width:30px;
     text-align:center;
+    font-size:18px;
     font-weight:bold;
 }
 
-/* BUTTONS */
 .controls{
     display:flex;
     gap:8px;
@@ -150,8 +157,8 @@ body{
 }
 
 button.action{
-    width:46px;
-    height:46px;
+    width:42px;
+    height:42px;
     border:none;
     border-radius:10px;
     font-size:30px;
@@ -160,7 +167,6 @@ button.action{
     color:white;
 }
 
-/* click feedback */
 button.action:active{
     transform:scale(0.9);
 }
@@ -168,10 +174,14 @@ button.action:active{
 /* TOP RIGHT */
 .top-right{
     position:fixed;
-    top:10px;
-    right:10px;
+    top:15px;
+    right:15px;
     display:flex;
     gap:10px;
+    z-index:9999;
+
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .top-right button{
@@ -193,34 +203,34 @@ button.action:active{
 .category-title{
     width:100%;
     max-width:700px;
-    margin:20px auto 8px auto;
+    margin:18px auto 8px auto;
     font-size:16px;
-    opacity:0.8;
+    opacity:0.9;
 }
 
 /* MOBILE FIX */
 @media (max-width:600px){
 
     body{
-        padding:10px;
+        padding-top:80px;
     }
 
     .search-input.active{
-        width:130px;
+        width:140px;
     }
 
     .item{
-        max-width:100%;
-    }
-
-    button.action{
-        width:50px;
-        height:50px;
-        font-size:34px;
+        max-width:95%;
     }
 
     .top-left{
         gap:6px;
+    }
+
+    button.action{
+        width:46px;
+        height:46px;
+        font-size:32px;
     }
 }
 </style>
@@ -229,10 +239,9 @@ button.action:active{
 
 <body>
 
-<!-- TOP LEFT -->
 <div class="top-left">
 
-      <div class="filter-wrapper">
+    <div class="filter-wrapper">
         <button class="filter-btn" onclick="toggleMenu()">⚙️</button>
         <div class="filter-menu" id="menu">
             <button onclick="setSort('name')">alphabetical</button>
@@ -241,7 +250,7 @@ button.action:active{
             <button onclick="setSort('store')">store</button>
         </div>
     </div>
-  
+
     <div class="search-wrapper">
         <button class="search-toggle" onclick="toggleSearch()">🔍</button>
         <input id="search" class="search-input" placeholder="search..." />
@@ -249,7 +258,6 @@ button.action:active{
 
 </div>
 
-<!-- TOP RIGHT -->
 <div class="top-right">
     <button onclick="loadGameTrigger()">📂</button>
     <button onclick="saveGame()">💾</button>
@@ -265,7 +273,7 @@ button.action:active{
 <script>
 
 function toggleSearch(){
-    const input=document.getElementById("search");
+    const input = document.getElementById("search");
     input.classList.toggle("active");
     if(input.classList.contains("active")) input.focus();
 }
@@ -274,7 +282,7 @@ function loadGameTrigger(){
     document.getElementById("fileInput").click();
 }
 
-const items=[
+const items = [
 { name:"lemon", category:"grocery store" },
 { name:"orange", category:"grocery store" },
 { name:"lime", category:"grocery store" },
@@ -313,18 +321,18 @@ const items=[
 { name:"taco", category:"island" }
 ];
 
-let sortMode="name";
-const inventory=document.getElementById("inventory");
+let sortMode = "name";
+const inventory = document.getElementById("inventory");
 
 function toggleMenu(){
-    const menu=document.getElementById("menu");
-    menu.style.display=menu.style.display==="block"?"none":"block";
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
 
 function setSort(mode){
-    sortMode=mode;
-    document.getElementById("menu").style.display="none";
+    sortMode = mode;
     draw();
+    document.getElementById("menu").style.display = "none";
 }
 
 function getCount(item){
@@ -337,10 +345,10 @@ function setCount(item,value){
 
 function renderItem(item){
 
-    const row=document.createElement("div");
-    row.className="item";
+    const row = document.createElement("div");
+    row.className = "item";
 
-    row.innerHTML=`
+    row.innerHTML = `
         <div class="left-box">
             <span class="count">${getCount(item.name)}</span>
             <span>${item.name}</span>
@@ -351,13 +359,13 @@ function renderItem(item){
         </div>
     `;
 
-    row.querySelectorAll(".action")[0].onclick=()=>{
-        setCount(item.name,getCount(item.name)+1);
+    row.querySelector(".controls button:nth-child(1)").onclick = ()=>{
+        setCount(item.name, getCount(item.name)+1);
         draw();
     };
 
-    row.querySelectorAll(".action")[1].onclick=()=>{
-        setCount(item.name,Math.max(0,getCount(item.name)-1));
+    row.querySelector(".controls button:nth-child(2)").onclick = ()=>{
+        setCount(item.name, Math.max(0,getCount(item.name)-1));
         draw();
     };
 
@@ -368,13 +376,13 @@ function draw(){
 
     inventory.innerHTML="";
 
-    const filter=document.getElementById("search").value.toLowerCase();
+    const filter = document.getElementById("search").value.toLowerCase();
 
-    let list=[...items];
+    let list = [...items];
 
     list.sort((a,b)=>{
-        const aCount=getCount(a.name);
-        const bCount=getCount(b.name);
+        const aCount = getCount(a.name);
+        const bCount = getCount(b.name);
 
         if(sortMode==="name") return a.name.localeCompare(b.name);
         if(sortMode==="min") return aCount-bCount;
@@ -385,30 +393,10 @@ function draw(){
         }
     });
 
-    if(sortMode==="store"){
-        let grouped={};
-
-        list.forEach(i=>{
-            if(!i.name.toLowerCase().includes(filter)) return;
-            if(!grouped[i.category]) grouped[i.category]=[];
-            grouped[i.category].push(i);
-        });
-
-        Object.keys(grouped).forEach(cat=>{
-            const title=document.createElement("div");
-            title.className="category-title";
-            title.textContent=cat;
-            inventory.appendChild(title);
-
-            grouped[cat].forEach(renderItem);
-        });
-
-    } else {
-        list.forEach(i=>{
-            if(!i.name.toLowerCase().includes(filter)) return;
-            renderItem(i);
-        });
-    }
+    list.forEach(item=>{
+        if(!item.name.toLowerCase().includes(filter)) return;
+        renderItem(item);
+    });
 }
 
 function saveGame(){
