@@ -26,7 +26,6 @@ body{
     height:auto;
 }
 
-/* HEADER (FIX) */
 .header{
     display:flex;
     justify-content:space-between;
@@ -35,21 +34,18 @@ body{
     gap:10px;
 }
 
-/* LEFT SIDE */
 .left-controls{
     display:flex;
     align-items:center;
     gap:10px;
 }
 
-/* RIGHT SIDE */
 .right-controls{
     display:flex;
     gap:10px;
     align-items:center;
 }
 
-/* SEARCH */
 .search-wrapper{
     display:flex;
     align-items:center;
@@ -84,7 +80,6 @@ body{
     padding:10px;
 }
 
-/* FILTER */
 .filter-wrapper{
     position:relative;
 }
@@ -104,7 +99,10 @@ body{
     position:absolute;
     top:55px;
     left:0;
-    background:none;
+    background:#2c3b1f;
+    border-radius:8px;
+    overflow:hidden;
+    z-index:1000;
 }
 
 .filter-menu button{
@@ -122,7 +120,6 @@ body{
     background:#3b4c24;
 }
 
-/* RIGHT BUTTONS */
 .right-controls button{
     width:50px;
     height:50px;
@@ -138,7 +135,6 @@ body{
     font-size:34px;
 }
 
-/* ITEM */
 .item{
     display:flex;
     justify-content:space-between;
@@ -188,7 +184,6 @@ button.action:active{
     transform:scale(0.9);
 }
 
-/* CATEGORY */
 .category-title{
     width:100%;
     max-width:700px;
@@ -197,9 +192,7 @@ button.action:active{
     opacity:0.9;
 }
 
-/* MOBILE */
 @media (max-width:600px){
-
     .header{
         flex-wrap:wrap;
         gap:8px;
@@ -225,7 +218,6 @@ button.action:active{
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
 
     <div class="left-controls">
@@ -256,7 +248,7 @@ button.action:active{
 </div>
 
 <input type="file" id="fileInput" style="display:none" onchange="loadGame(event)">
-  
+
 <img src="sneaky.png" class="title-image">
 <br>
 <div id="inventory"></div>
@@ -315,15 +307,38 @@ const items = [
 let sortMode = "name";
 const inventory = document.getElementById("inventory");
 
+function updateFilterUI(){
+    document.querySelectorAll(".filter-menu button").forEach(btn=>{
+        const text = btn.textContent.replace("» ","");
+
+        if(btn.textContent === "") return;
+
+        if(btn.textContent.includes("alphabetical")) btn.dataset.sort = "name";
+        if(btn.textContent.includes("min")) btn.dataset.sort = "min";
+        if(btn.textContent.includes("max")) btn.dataset.sort = "max";
+        if(btn.textContent.includes("store")) btn.dataset.sort = "store";
+
+        if(btn.dataset.sort === sortMode){
+            btn.textContent = "» " + text;
+        } else {
+            btn.textContent = text;
+        }
+    });
+}
+
 function toggleMenu(){
     const menu = document.getElementById("menu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    const open = menu.style.display === "block";
+    menu.style.display = open ? "none" : "block";
+
+    if(!open) updateFilterUI();
 }
 
 function setSort(mode){
     sortMode = mode;
-    draw();
     document.getElementById("menu").style.display = "none";
+    updateFilterUI();
+    draw();
 }
 
 function getCount(item){
@@ -384,10 +399,37 @@ function draw(){
         }
     });
 
-    list.forEach(item=>{
-        if(!item.name.toLowerCase().includes(filter)) return;
-        renderItem(item);
-    });
+    if(sortMode === "store"){
+
+        const grouped = {};
+
+        list.forEach(item=>{
+            if(!item.name.toLowerCase().includes(filter)) return;
+
+            if(!grouped[item.category]){
+                grouped[item.category] = [];
+            }
+
+            grouped[item.category].push(item);
+        });
+
+        Object.keys(grouped).forEach(cat=>{
+            const title = document.createElement("div");
+            title.className = "category-title";
+            title.textContent = cat;
+            inventory.appendChild(title);
+
+            grouped[cat].forEach(renderItem);
+        });
+
+    } else {
+
+        list.forEach(item=>{
+            if(!item.name.toLowerCase().includes(filter)) return;
+            renderItem(item);
+        });
+
+    }
 }
 
 function saveGame(){
